@@ -1,0 +1,43 @@
+// (async () => {
+//     try {  
+//       await connection.initialize()
+//         .then(() => {
+//             console.log("The datasource has been initialized successfully.")   
+//         })
+//         .catch(err => {
+//             console.log("Error during datasource initialization.", err)   
+//             process.exit(1)   
+//         })   
+
+//       console.log("Connected to database successfully")   
+
+//       const courses = Object.values(COURSES) as DeepPartial<Course>[]   
+    
+//       const courseRepository = connection.getRepository(Course)   
+//       const lessonsRepository = connection.getRepository(Lesson)   
+
+//       // await lessonsRepository.delete({})
+//       // await courseRepository.delete({})
+
+
+//       for (let courseData of courses) {
+//           // console.log(`Inserting course ${courseData.title}`)   
+//           const course = courseRepository.create(courseData)   
+//           await courseRepository.save(course)   
+
+//           if (courseData.lessons) {
+//               for (let lessonData of courseData.lessons) {
+//                   // console.log(`Inserting lesson ${lessonData.title}`)   
+                  
+//                   const lesson = lessonsRepository.create(lessonData)   
+//                   lesson.course = course   
+//                   await lessonsRepository.save(lesson)   
+//               }
+//           }
+//       }
+
+//     } catch (error) {
+//       console.log("Cannot connect to database", error)   
+//       process.exit(1)   
+//     }
+// })()   
