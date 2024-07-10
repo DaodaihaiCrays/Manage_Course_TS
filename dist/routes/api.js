@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const course_1 = require("../controller/course");
 const user_1 = require("../controller/user");
 const routerAPI = express_1.default.Router();
-routerAPI.get('/course', course_1.getAllCourseController);
+routerAPI.get('/course', user_1.checkAuthController, course_1.getAllCourseController);
 routerAPI.get('/course/:courseUrl', user_1.checkAuthController, course_1.getCourseByUrlNameController);
 routerAPI.get('/course/:courseId/lessons', user_1.checkAuthController, course_1.getLeesonFromACourseController);
 routerAPI.put('/course/:courseId', user_1.checkAuthController, course_1.updateCourseController);

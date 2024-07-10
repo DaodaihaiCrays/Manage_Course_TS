@@ -34,7 +34,7 @@ export const registerController = async (req: Request, res: Response) => {
         res.status(500).json({
             error: {
                 code: 500,
-                message: "An error occurred while createing an user"
+                message: "An error occurred while creating an user"
             }
         })  
     }

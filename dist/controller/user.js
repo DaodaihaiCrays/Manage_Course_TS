@@ -17,7 +17,7 @@ const user_1 = require("../service/user");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const registerController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const registerController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log(typeof req.body)
         const result = yield (0, user_1.registerService)(req.body);
@@ -48,7 +48,7 @@ const registerController = (req, res, next) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.registerController = registerController;
-const loginController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const loginController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // console.log(typeof req.body)
         const result = yield (0, user_1.loginService)(req.body);
@@ -83,7 +83,7 @@ exports.loginController = loginController;
 const checkAuthController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const token = req.headers.authorization.split(" ")[1];
-        const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY); // Xác định kiểu cụ thể cho decodeToken
+        const decodedToken = jsonwebtoken_1.default.verify(token, process.env.JWT_KEY);
         req.user = decodedToken;
         next();
     }

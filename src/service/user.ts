@@ -1,79 +1,70 @@
-import { Response, Request } from "express"   
-import connection from '../config/database'   
-import { User } from "../models/user"   
-import {hashPassword, comparePassword, validateEmail} from "../util/util"
+import { User } from "../models/user";
+import { comparePassword, hashPassword, validateEmail } from "../util/util";
+import connection from '../config/database';
+import { RowDataPacket } from "mysql2";
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
 
-dotenv.config()
+const stringToBoolean = (str: string | undefined): boolean => {
+    if (str === undefined) return false;
+    return str.toLowerCase() === 'true';
+};
 
-if (dotenv.config().error) {
-    console.log("Cannot load .env file")   
-    process.exit(1)   
-  }
+export const registerService = async (userData: User) => {
+    try {
+        const email = userData.email;
 
-(async () => {
-    try {  
-      await connection.initialize()
-  
+        const [existingUser] = await connection.query<RowDataPacket[]>(`
+            SELECT * FROM user WHERE email = ?
+        `, [email]);
+
+        if (existingUser.length > 0 || !validateEmail(email)) {
+            return 1;
+        }
+
+        const hashedPassword = await hashPassword(userData.passwordSalt);
+
+        if(userData.isAdmin == true)
+
+
+        await connection.execute(`
+            INSERT INTO user (email, passwordSalt, pictureUrl, isAdmin)
+            VALUES (?, ?, ?, ?)
+        `, [userData.email, hashedPassword, userData.pictureUrl, userData.isAdmin]);
+
+        return 0;
     } catch (error) {
-      console.log("Cannot connect to database", error)   
-      process.exit(1)   
+        console.error("Error in registerService: ", error);
+        throw new Error("Error registering user");
     }
-})()   
+};
 
-export const registerService = async(userData: User) => { 
-    const repository =  connection.getRepository(User)
+export const loginService = async (userData: any) => {
+    const email = userData.email;
 
-    const email = userData.email
-    const user = await repository.createQueryBuilder("user")
-        .where("email = :email", {email})
-        .getOne()   
-   
-    if (user || !validateEmail(email)) {
-        return 1
+    if (!validateEmail(email)) {
+        return false;
     }
 
-    const hashedPassword = await hashPassword(userData.passwordSalt)
+    const [userRows] = await connection.query<RowDataPacket[]>(`
+        SELECT * FROM user WHERE email = ?
+    `, [email]);
 
-    const userNew = connection.getRepository(User)
-    .create({
-        email: userData.email,
-        passwordSalt: hashedPassword,
-        pictureUrl: userData.pictureUrl,
-        isAdmin: userData.isAdmin
-    })   
-  
-   
-    await repository.save(userNew)   
-  
-    return 0   
-}
+    const user = userRows[0];
 
-export const loginService = async(userData: any) => { 
-    const repository =  connection.getRepository(User)
-
-    const email = userData.email
-    if(!validateEmail(email))
-        return false
-
-    const user = await repository.createQueryBuilder("user")
-        .where("email = :email", {email})
-        .getOne()   
-    console.log(user)
     if (!user) {
-        return null
+        return null;
     }
 
-    const checkPass: Boolean = await comparePassword(userData.password, user.passwordSalt)
+    const checkPass = await comparePassword(userData.password, user.passwordSalt);
 
-    if(checkPass) {
+    if (checkPass) {
         const token = jwt.sign({
             email: email,
-            id: user['id']
-        }, process.env.JWT_KEY!, { expiresIn: process.env.JWT_EXPIRE})
-        return token
+            id: user.id
+        }, process.env.JWT_KEY!, { expiresIn: process.env.JWT_EXPIRE });
+
+        return token;
     }
 
-    return null
-}
+    return null;
+};

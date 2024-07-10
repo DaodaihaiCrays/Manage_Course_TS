@@ -83,11 +83,8 @@ const createACourseService = (data) => __awaiter(void 0, void 0, void 0, functio
         .createQueryBuilder("courses")
         .select("MAX(courses.seqNo)", "max")
         .getRawOne();
-    // Tạo một thực thể Course mới
     const course = database_1.default.getRepository(course_1.Course)
-        .create(Object.assign(Object.assign({}, data), { seqNo: ((_a = getSeqNo === null || getSeqNo === void 0 ? void 0 : getSeqNo.max) !== null && _a !== void 0 ? _a : 0) + 1 // Cách tính seqNo đơn giản
-     }));
-    // Lưu thực thể vào cơ sở dữ liệu
+        .create(Object.assign(Object.assign({}, data), { seqNo: ((_a = getSeqNo === null || getSeqNo === void 0 ? void 0 : getSeqNo.max) !== null && _a !== void 0 ? _a : 0) + 1 }));
     const savedCourse = yield reponsitory.save(course);
     return savedCourse;
 });
@@ -95,7 +92,6 @@ exports.createACourseService = createACourseService;
 const deleteACourseService = (courseId) => __awaiter(void 0, void 0, void 0, function* () {
     const reponsitoryCourse = database_1.default.getRepository(course_1.Course);
     const reponsitoryLessons = database_1.default.getRepository(lesson_1.Lesson);
-    // Xóa các lesson theo courseId
     let check = yield reponsitoryLessons
         .createQueryBuilder()
         .delete()
@@ -104,7 +100,6 @@ const deleteACourseService = (courseId) => __awaiter(void 0, void 0, void 0, fun
         .execute();
     if (!check)
         return false;
-    // Xóa course theo courseId
     check = yield reponsitoryCourse
         .createQueryBuilder()
         .delete()

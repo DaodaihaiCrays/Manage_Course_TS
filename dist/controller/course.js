@@ -130,7 +130,7 @@ const getLeesonFromACourseController = (req, res) => __awaiter(void 0, void 0, v
     }
 });
 exports.getLeesonFromACourseController = getLeesonFromACourseController;
-const updateCourseController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateCourseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const courseId = req.params.courseId;
         const change = req.body;
@@ -170,7 +170,7 @@ const updateCourseController = (req, res, next) => __awaiter(void 0, void 0, voi
     }
 });
 exports.updateCourseController = updateCourseController;
-const createCourseController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createCourseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = req.body;
         const result = yield (0, course_1.createACourseService)(data);
@@ -202,7 +202,7 @@ const createCourseController = (req, res, next) => __awaiter(void 0, void 0, voi
     }
 });
 exports.createCourseController = createCourseController;
-const deleteCourseController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteCourseController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const courseId = req.params.courseId;
         if (!courseId) {

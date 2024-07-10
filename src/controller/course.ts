@@ -10,6 +10,7 @@ import { NextFunction, Request, Response } from "express"
 
 export const getAllCourseController = async (req: Request, res: Response) => {
     try {
+        console.log("dddddddddddddddddddddd")
         const result = await getAllCourseService();
    
         if (result !== null) {
@@ -79,10 +80,10 @@ export const getCourseByUrlNameController = async (req: Request, res: Response) 
     }
 };
 
-export const getLeesonFromACourseController = async (req: Request, res: Response) => {
+export const getLessonFromACourseController = async (req: Request, res: Response) => {
     try {
         const courseId = req.params.courseId
-  
+        
         let pageNumber: any = req.query.pageNumber
         let pageSize: any = req.query.pageSize
 
@@ -133,40 +134,40 @@ export const getLeesonFromACourseController = async (req: Request, res: Response
 
 export const updateCourseController = async (req: Request, res: Response) => {
     try {
-        const courseId = req.params.courseId
-        const change:object = req.body
+        const courseId = req.params.courseId;
+        const change: object = req.body;
 
-        if(!courseId) {
-            res.status(400).json({
+        if (!courseId) {
+            return res.status(400).json({
                 error: {
                     code: 400,
                     message: "Cannot find the course"
                 }
-            });  
+            });
         }
 
         const result = await updateACourseService(courseId, change);
-   
-        if (result.affected !=0) {
-            res.status(200).json({
+
+        if (result.affectedRows !== 0) {
+            return res.status(200).json({
                 success: {
                     code: 200,
                     message: "Success"
                 }
             });
         } else {
-            res.status(400).json({
+            return res.status(400).json({
                 error: {
                     code: 400,
-                    message: "Cannot update the courses"
+                    message: "Cannot update the course"
                 }
             });
         }
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             error: {
                 code: 500,
-                message: "An error occurred while fetching lessons from the course"
+                message: "An error occurred while updating the course"
             }
         });
     }
@@ -233,7 +234,7 @@ export const deleteCourseController = async (req: Request, res: Response) => {
             res.status(400).json({
                 error: {
                     code: 400,
-                    message: "Cannot update the courses"
+                    message: "Cannot delete the course"
                 }
             });
         }

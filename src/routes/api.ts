@@ -4,7 +4,7 @@ import express from "express"
 import {
   getAllCourseController,
   getCourseByUrlNameController,
-  getLeesonFromACourseController,
+  getLessonFromACourseController,
   updateCourseController,
   createCourseController,
   deleteCourseController
@@ -20,7 +20,7 @@ const routerAPI = express.Router()
 
 routerAPI.get('/course', checkAuthController, getAllCourseController)
 routerAPI.get('/course/:courseUrl', checkAuthController, getCourseByUrlNameController)
-routerAPI.get('/course/:courseId/lessons', checkAuthController, getLeesonFromACourseController)
+routerAPI.get('/course/:courseId/lessons', checkAuthController, getLessonFromACourseController)
 routerAPI.put('/course/:courseId', checkAuthController, updateCourseController)
 routerAPI.post('/course', checkAuthController, createCourseController)
 routerAPI.delete('/course/:courseId', checkAuthController, deleteCourseController)
