@@ -10,7 +10,7 @@ import { NextFunction, Request, Response } from "express"
 
 export const getAllCourseController = async (req: Request, res: Response) => {
     try {
-        console.log("dddddddddddddddddddddd")
+        
         const result = await getAllCourseService();
    
         if (result !== null) {

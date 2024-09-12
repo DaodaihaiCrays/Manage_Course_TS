@@ -48,23 +48,20 @@ export const updateACourseService = async(courseId: string, change: object) => {
 
 export const createACourseService = async(data: object) => {
   console.log(data)
-  // Query to get the maximum seqNo
   const [getSeqNoRows] = await connection.query<RowDataPacket[]>(`
       SELECT MAX(seqNo) as max FROM course
   `);
   console.log(getSeqNoRows)
-  // Parse the maximum seqNo and increment it
+
   const seqNo = (getSeqNoRows[0]?.max ?? 0) + 1;
 
-  // Insert the new course with the incremented seqNo
   const [result] = await connection.query<OkPacket>(`
       INSERT INTO course SET ?
   `, [{ ...data, seqNo }]);
 
-  // Get the inserted course ID
   const savedCourseId = result.insertId;
 
-  // Query to fetch the newly inserted course by ID
+
   const [savedCourseRows] = await connection.query<RowDataPacket[]>(`
       SELECT * FROM course WHERE id = ?
   `, [savedCourseId]);
